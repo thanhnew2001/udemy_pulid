@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 import os
 import replicate
 import uuid
@@ -44,7 +44,9 @@ def upload_image():
     image.save(image_path)
 
     # Chuyển đổi hình ảnh thành URL để sử dụng trong API
-    image_url = f'http://localhost:5000/{image_path}'
+    # image_url = f'http://localhost:5000/{image_path}'
+    image_url = url_for('static', filename=f'uploads/{filename}', _external=True)
+
 
     # Tạo yêu cầu tới API Replicate
     input_data = {
