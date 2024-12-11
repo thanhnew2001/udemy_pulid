@@ -1,0 +1,17 @@
+Tôi cần tạo 1 ứng dụng web sử dụng Flask api, template cho index.html. Ứng dụng cho phép người dùng upload 1 tấm hình và nhập prompt. Hệ thống sẽ gọi API của PulID trên replicate để trả về tấm hình mới. Lưu tấm hình này với tên duy nhất trên backend trong thư mục static/output và trả về đường dẫn hình.
+Đây là cách gọi api replicate:
+import replicate
+
+input = {
+    "prompt": "portrait, impressionist painting, loose brushwork, vibrant color, light and shadow play",
+    "main_face_image": "https://replicate.delivery/pbxt/Kr6iendsvYS0F3MLmwRZ8q07XIMEJdemnQI3Cmq9nNrauJbq/zcy.webp"
+}
+
+output = replicate.run(
+    "zsxkib/pulid:43d309c37ab4e62361e5e29b8e9e867fb2dcbcec77ae91206a8d95ac5dd451a0",
+    input=input
+)
+for index, item in enumerate(output):
+    with open(f"output_{index}.webp", "wb") as file:
+        file.write(item.read())
+#=> output_0.webp, output_1.webp, output_2.webp, output_3.web...

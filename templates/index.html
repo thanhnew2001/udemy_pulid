@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image and Generate</title>
+</head>
+<body>
+    <h1>Upload Image and Enter Prompt</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="image">Image:</label>
+        <input type="file" name="image" id="image" required><br><br>
+
+        <label for="prompt">Prompt:</label>
+        <input type="text" name="prompt" id="prompt" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        const form = document.querySelector('form');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            const resultDiv = document.getElementById('result');
+
+            if (result.error) {
+                resultDiv.innerHTML = `<p>Error: ${result.error}</p>`;
+            } else {
+                resultDiv.innerHTML = "<h3>Generated Images:</h3>";
+                result.images.forEach(imageUrl => {
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.alt = "Generated Image";
+                    img.style.maxWidth = "300px";
+                    img.style.margin = "10px";
+                    resultDiv.appendChild(img);
+                });
+            }
+        };
+    </script>
+</body>
+</html>
